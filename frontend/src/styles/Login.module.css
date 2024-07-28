@@ -1,0 +1,32 @@
+/* styles/Login.module.css */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .fadeIn {
+    animation: fadeIn 2s ease-in-out forwards;
+  }
+
+  /* ログインボタンのスタイル */
+.loginButton {
+    background-color: #7aade2; /* ボタンの背景色 */
+    color: white; /* ボタン内のテキスト色 */
+    border: none; /* ボーダーを削除 */
+    padding: 15px 30px; /* パディング */
+    border-radius: 10px; /* ボーダーの丸み */
+    font-size: 16px; /* フォントサイズ */
+    cursor: pointer; /* ホバー時のカーソルをポインタに */
+    outline: none; /* アウトラインを削除 */
+  }
+  
+  .loginButton:disabled {
+    background-color: #cccccc; /* 無効時の背景色 */
+    cursor: not-allowed; /* 無効時のカーソル */
+  }
+
+  .forgotPasswordLink {
+    margin-top: 20px; /* 上部のマージンを追加して隙間を作る */
+    display: block; /* ブロックレベル要素にすることで、マージンが適用される */
+    font-size: 16px; /* 必要に応じてフォントサイズを調整 */
+  }

@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .userProfile {
+    align-self: flex-end;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-size: 20px;
+  }
+  
+  .box {
+    background-color: #f0f0f0; /* 背景色 */
+    border-radius: 20px; /* 角の丸み */
+    padding: 20px; /* パディング */
+    margin: 20px 0; /* 上下のマージン */
+    width: 60%; /* 幅 */
+    text-align: center; /* テキストを中央揃え */
+    box-shadow: 0 4px 8px rgba(73, 63, 63, 0.1); /* 影をつける */
+  }
+
+  .link {
+    color: #007bff; /* リンクの色 */
+    text-decoration: none; /* 下線を消す */
+  }
+  
+  .link:hover {
+    text-decoration: underline; /* ホバー時に下線を表示 */
+  }
