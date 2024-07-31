@@ -2,24 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-.message-box {
-  max-width: 70%;
-  position: relative;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 25px;
-}
-
-.my-message {
-  margin-left: 30%;
-  text-align: right;
-  background-color: #007bff;
-  color: white;
-}
-
-.ai-message {
-  margin-right: 30%;
-  text-align: left;
-  background-color: #6c757d;
-  color: white;
+@media (max-width: 375px) {
+  .container {
+    padding: 10px;
+    max-width: 100%;
+  }
+  .message-box {
+    width: 100%;
+    margin: 5px 0;
+  }
+  .my-message {
+    background-color: #007bff;
+    color: #fff;
+    text-align: right;
+    border-radius: 15px 15px 0 15px;
+  }
+  .ai-message {
+    background-color: #6c757d;
+    color: #fff;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+  }
 }
