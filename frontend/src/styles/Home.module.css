@@ -1,49 +1,177 @@
-.btn {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
 .container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.homeIcon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
 }
 
 .title {
   font-size: 2rem;
-  color: #333;
-  margin-bottom: 20px;
+  background-clip: text;
+  color: transparent;
+  background: linear-gradient(to right, #00f, #0ff);
+  margin-bottom: 1rem;
 }
 
-.links {
+.dateTime {
+  margin-bottom: 1.5rem;
+}
+
+.time {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 1.5rem;
+}
+
+.buttonsRow {
+  display: flex;
+  justify-content: space-between; /* 修正: 横に並べるための設定 */
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.buttonWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+}
+
+.buttonWrapperLarge,
+.buttonWrapper {
+  flex: 1; /* 幅を均等にするために flex プロパティを設定 */
+}
+
+.breakTimes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.breakTimeSet {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
 }
 
 .button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  display: block;
-  width: 220px;
-  text-align: center;
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s;
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+.buttonLarge {
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s;
+  width: 100%;
+  height: 150px;
+  position: relative;
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #d0d0d0;
+}
+
+.startButton {
+  background-color: #b3e5fc;
+}
+
+.endButton {
+  background-color: #ffccbc;
+}
+
+.breakButton {
+  background-color: #fff9c4;
+}
+
+.consultingButton {
+  background-color: #e1bee7;
+}
+
+.icon {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+}
+
+.timeStamp {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.recordedTimes {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.record {
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.start {
+  background-color: #b3e5fc;
+}
+
+.end {
+  background-color: #ffccbc;
+}
+
+.break {
+  background-color: #fff9c4;
+}
+
+.breakStart {
+  background-color: #ffecb3;
+}
+
+.breakEnd {
+  background-color: #fff176;
+}
+
+.consulting {
+  background-color: #e1bee7;
+}
+
+.iconSmall {
+  width: 50px;
+  height: 50px;
 }
