@@ -1,4 +1,3 @@
-/* styles/Login.module.css */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -22,6 +21,7 @@
   font-size: 16px; /* フォントサイズ */
   cursor: pointer; /* ホバー時のカーソルをポインタに */
   outline: none; /* アウトラインを削除 */
+  width: 100%; /* 幅を全体に広げる */
 }
 
 .loginButton:disabled {
@@ -30,7 +30,63 @@
 }
 
 .forgotPasswordLink {
-  margin-top: 20px; /* 上部のマージンを追加して隙間を作る */
-  display: block; /* ブロックレベル要素にすることで、マージンが適用される */
-  font-size: 16px; /* 必要に応じてフォントサイズを調整 */
+  margin-top: 20px;
+  display: block;
+  font-size: 16px;
+  text-align: center; /* テキストリンクを中央に配置 */
+}
+
+.container {
+  max-width: 400px; /* 幅を400pxに設定 */
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.inputField {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%; /* 幅を100%にする */
+  font-size: 1rem;
+}
+
+.title {
+  font-size: 2rem; /* フォントサイズを調整 */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #00f, #0ff);
+  animation: fadeIn 2s ease-in-out forwards;
+}
+
+.subtitle {
+  font-size: 1.25rem; /* フォントサイズを調整 */
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  width: 100%; /* 幅を100%に */
+}
+
+.checkboxLabel input {
+  margin-right: 10px;
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 左揃えにする */
+  width: 100%;
 }
