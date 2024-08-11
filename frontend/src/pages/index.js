@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css"; // CSSモジュールをインポート
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
   const [breakTimes, setBreakTimes] = useState([]);
   const [consultingTimes, setConsultingTimes] = useState([]);
   const [breakState, setBreakState] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,8 +34,9 @@ export default function Home() {
     setBreakState(!breakState);
   };
 
-  const recordConsultingTime = () => {
-    setConsultingTimes([...consultingTimes, new Date()]);
+  const handleLogout = () => {
+    // ログアウト処理をここに追加（例えば、トークンの削除など）
+    router.push("/login"); // ログアウト後、ログインページに遷移
   };
 
   const formatTime = (date) => {
@@ -43,9 +46,10 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Link href="/">
-          <img src="/home.png" alt="Home" className={styles.homeIcon} />
-        </Link>
+        <button onClick={handleLogout}>
+          <img src="/logout.png" alt="logout" className={styles.homeIcon} />
+        </button>
+        <img src="/globe.png" alt="globe" className={styles.homeIcon} /> {/* 新しく追加 */}
       </div>
       <h1 className={styles.title}>Voices</h1>
       <div className={styles.dateTime}>

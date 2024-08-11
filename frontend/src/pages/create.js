@@ -3,50 +3,36 @@ import { useRouter } from "next/router";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
+import styles from "../styles/CreatePage.module.css"; // CSSモジュールをインポート
 
 const CreatePage = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatInput, setChatInput] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const { transcript, resetTranscript } = useSpeechRecognition();
   const [image, setImage] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const router = useRouter();
   const inputRef = useRef(null);
+  const [selectedEmotionImg, setSelectedEmotionImg] = useState(null);
 
   useEffect(() => {
     addMessage("どうされましたか？詳しくお聞かせください。", "bot");
+
+    // URLから選択された画像を取得
+    const img = router.query.img;
+    if (img) {
+      setSelectedEmotionImg(decodeURIComponent(img));
+    }
   }, []);
 
-  const handleChat = async () => {
+  const handleChat = () => {
     if (chatInput || transcript) {
       const userMessage = chatInput || transcript;
       addMessage(userMessage, "user");
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: userMessage }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          addMessage(data.response, "bot");
-        } else {
-          addMessage("エラーが発生しました。もう一度お試しください。", "bot");
-        }
-      } catch (error) {
-        console.error("Chat API error:", error);
-        addMessage("通信エラーが発生しました。", "bot");
-      }
-
       setChatInput("");
       resetTranscript();
-      router.push("/index");
     }
   };
 
@@ -58,21 +44,16 @@ const CreatePage = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index");
+      router.push("/index"); // 遷移先を index.js に設定
     }, 3000);
   };
 
   const handleStopChat = () => {
-    setModalMessage("お疲れ様でした。");
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index");
+      router.push("/index"); // 遷移先を index.js に設定
     }, 3000);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
   };
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -104,9 +85,14 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-10">
+    <div className={styles.container}>
       <div className="flex flex-col items-center">
         <div className="w-full bg-white p-4 rounded shadow-md">
+          {selectedEmotionImg && (
+            <div className="mb-4 text-center">
+              <img src={selectedEmotionImg} alt="Selected Emotion" className="mx-auto" style={{ maxWidth: "100px", maxHeight: "100px" }} />
+            </div>
+          )}
           <div className="chat-box max-h-96 overflow-y-auto mb-4">
             {chatHistory.map((msg, index) => (
               <div key={index} className={`message ${msg.sender === "user" ? "text-right" : "text-left"}`}>
@@ -114,18 +100,11 @@ const CreatePage = () => {
               </div>
             ))}
           </div>
-          <div className="relative">
-            <textarea
-              ref={inputRef}
-              className="w-full p-2 border rounded mb-2 pr-12"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              placeholder="メッセージを入力..."
-              style={{ paddingRight: "4rem" }} // 右側にアイコンのスペースを確保
-            />
-            <div className="absolute right-2 bottom-2 flex space-x-2 opacity-70">
+          <div className={styles.textareaContainer}>
+            <textarea ref={inputRef} className={styles.textarea} value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="メッセージを入力..." />
+            <div className={styles.iconContainer}>
               <button onClick={startCamera} className="focus:outline-none">
-                <img src="/camera.png" alt="カメラ" className="w-6 h-6" />
+                <img src="/camera.png" alt="カメラ" className={styles.icon} />
               </button>
               <button
                 onClick={() => {
@@ -134,13 +113,13 @@ const CreatePage = () => {
                 }}
                 className="focus:outline-none"
               >
-                <img src="/mic.png" alt="マイク" className="w-6 h-6" />
+                <img src="/mic.png" alt="マイク" className={styles.icon} />
               </button>
               <button onClick={open} className="focus:outline-none">
-                <img src="/attach.png" alt="クリップ" className="w-6 h-6" />
+                <img src="/attach.png" alt="クリップ" className={styles.icon} />
               </button>
               <button onClick={handleChat} className="focus:outline-none">
-                <img src="/send.png" alt="送信" className="w-6 h-6" />
+                <img src="/send.png" alt="送信" className={styles.icon} />
               </button>
             </div>
           </div>
@@ -169,8 +148,8 @@ const CreatePage = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-          <div className="p-6 text-center" style={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}>
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
             <object type="image/svg+xml" data="/ThankYouSmilingPenguin.svg" style={{ width: "200px", height: "auto" }}>
               Your browser does not support SVG
             </object>

@@ -1,0 +1,102 @@
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.textareaContainer {
+  position: relative;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px;
+  .container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .textareaContainer {
+    position: relative;
+  }
+
+  .textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding-right: 50px; /* アイコン用のスペースを確保 */
+    box-sizing: border-box;
+  }
+
+  .iconContainer {
+    position: absolute;
+    right: 8px; /* テキストエリアの右端からの距離 */
+    bottom: 8px; /* テキストエリアの下端からの距離 */
+    display: flex;
+    gap: 5px;
+  }
+
+  .icon {
+    width: 18px; /* サイズを18pxに */
+    height: 18px;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modalContent {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+  }
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding-right: 50px; /* アイコン用のスペースを確保 */
+  box-sizing: border-box;
+}
+
+.iconContainer {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.icon {
+  width: 16px; /* サイズを50%に */
+  height: 16px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+}
