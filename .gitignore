@@ -1,0 +1,5 @@
+# .gitignoreファイルの内容(backend関連)
+.env
+
+# SSL証明書
+fastAPI_tech_ga_0-main/DigiCertGlobalRootG2.crt.pem
