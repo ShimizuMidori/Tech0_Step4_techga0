@@ -2,4 +2,5 @@
 .env
 
 # SSL証明書
-fastAPI_tech_ga_0-main/DigiCertGlobalRootG2.crt.pem
+DigiCertGlobalRootG2.crt.pem
+DigiCertGlobalRootCA.crt.pem
