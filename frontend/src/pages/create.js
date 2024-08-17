@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import styles from "../styles/CreatePage.module.css"; // CSSモジュールをインポート
+import styles from "../styles/CreatePage.module.css";
 
 const CreatePage = () => {
   const [chatHistory, setChatHistory] = useState([]);
@@ -19,7 +19,6 @@ const CreatePage = () => {
   useEffect(() => {
     addMessage("どうされましたか？詳しくお聞かせください。", "bot");
 
-    // URLから選択された画像を取得
     const img = router.query.img;
     if (img) {
       setSelectedEmotionImg(decodeURIComponent(img));
@@ -44,7 +43,7 @@ const CreatePage = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index"); // 遷移先を index.js に設定
+      router.push("/index");
     }, 3000);
   };
 
@@ -52,7 +51,7 @@ const CreatePage = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index"); // 遷移先を index.js に設定
+      router.push("/index");
     }, 3000);
   };
 
@@ -100,51 +99,40 @@ const CreatePage = () => {
               </div>
             ))}
           </div>
-          <div className={styles.textareaContainer}>
-            <textarea ref={inputRef} className={styles.textarea} value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="メッセージを入力..." />
-            <div className={styles.iconContainer}>
-              <button onClick={startCamera} className="focus:outline-none">
-                <img src="/camera.png" alt="カメラ" className={styles.icon} />
-              </button>
-              <button
-                onClick={() => {
-                  SpeechRecognition.startListening({ continuous: true });
-                  inputRef.current.focus();
-                }}
-                className="focus:outline-none"
-              >
-                <img src="/mic.png" alt="マイク" className={styles.icon} />
-              </button>
-              <button onClick={open} className="focus:outline-none">
-                <img src="/attach.png" alt="クリップ" className={styles.icon} />
-              </button>
-              <button onClick={handleChat} className="focus:outline-none">
-                <img src="/send.png" alt="送信" className={styles.icon} />
-              </button>
-            </div>
-          </div>
-          <div {...getRootProps({ className: "dropzone" })} className="hidden">
-            <input {...getInputProps()} />
-          </div>
-          {image && (
-            <div className="mb-4">
-              <Image src={image} alt="Uploaded preview" className="mx-auto" width={500} height={500} />
-            </div>
-          )}
-          {capturedImage && (
-            <div className="mb-4">
-              <Image src={capturedImage} alt="Captured" className="mx-auto" width={500} height={500} />
-            </div>
-          )}
-          <div className="flex justify-between">
-            <button onClick={handleRegister} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mr-2">
-              登録する
-            </button>
-            <button onClick={handleStopChat} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
-              対話をやめる
-            </button>
-          </div>
         </div>
+      </div>
+
+      <div className={styles.textareaContainer}>
+        <textarea ref={inputRef} className={styles.textarea} value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="メッセージを入力..." />
+        <div className={styles.iconContainer}>
+          <button onClick={startCamera} className="focus:outline-none">
+            <img src="/camera.png" alt="カメラ" className={styles.icon} />
+          </button>
+          <button
+            onClick={() => {
+              SpeechRecognition.startListening({ continuous: true });
+              inputRef.current.focus();
+            }}
+            className="focus:outline-none"
+          >
+            <img src="/mic.png" alt="マイク" className={styles.icon} />
+          </button>
+          <button onClick={open} className="focus:outline-none">
+            <img src="/attach.png" alt="クリップ" className={styles.icon} />
+          </button>
+          <button onClick={handleChat} className="focus:outline-none">
+            <img src="/send.png" alt="送信" className={styles.icon} />
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.buttonContainer}>
+        <button onClick={handleRegister} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mr-2">
+          登録する
+        </button>
+        <button onClick={handleStopChat} className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
+          対話をやめる
+        </button>
       </div>
 
       {showModal && (
