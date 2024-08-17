@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import styles from "../styles/Select.module.css"; // CSSモジュールをインポート
+import styles from "../styles/Select.module.css";
 
 const emotions = [
-  { label: "喜（Joy）", img: "/joy.png" },
-  { label: "怒（Angry）", img: "/angry.png" },
-  { label: "悲（Sad）", img: "/sad.png" },
-  { label: "楽（Happy）", img: "/happy.png" },
-  { label: "心配・困った（Worried）", img: "/worried.png" },
-  { label: "複雑（Mixed）", img: "/mixed.png" },
+  { label: "ニュートラル（Neutral）", img: "/emotion_neutral.png" },
+  { label: "嬉しい（Happy）", img: "/emotion_happy.png" },
+  { label: "怒り（Angry）", img: "/emotion_angry.png" },
+  { label: "悲しい（Sad）", img: "/emotion_sad.png" },
+  { label: "混乱（Confused）", img: "/emotion_confused.png" },
+  { label: "楽しい（Fun）", img: "/emotion_fun.png" },
+  { label: "驚き（Surprised）", img: "/emotion_surprised.png" },
+  { label: "謝罪（Sorry）", img: "/emotion_sorry.png" },
 ];
+
+const MODAL_STAGES = {
+  INITIAL: 1,
+  DETAIL: 2,
+  THANKS: "thanks",
+};
 
 export default function Select() {
   const [selectedEmotion, setSelectedEmotion] = useState(null);
@@ -19,8 +27,8 @@ export default function Select() {
 
   const handleEmotionClick = (emotion) => {
     setSelectedEmotion(emotion);
-    localStorage.setItem("selectedEmotion", JSON.stringify(emotion)); // イラスト情報を保存
-    setModalStage(1);
+    localStorage.setItem("selectedEmotion", JSON.stringify(emotion));
+    setModalStage(MODAL_STAGES.INITIAL);
     setShowModal(true);
   };
 
@@ -31,9 +39,9 @@ export default function Select() {
   };
 
   const handleOkClick = () => {
-    if (modalStage === 1) {
-      setModalStage(2);
-    } else if (modalStage === 2) {
+    if (modalStage === MODAL_STAGES.INITIAL) {
+      setModalStage(MODAL_STAGES.DETAIL);
+    } else if (modalStage === MODAL_STAGES.DETAIL) {
       router.push({
         pathname: "/create",
         query: { img: encodeURIComponent(selectedEmotion.img) },
@@ -42,7 +50,7 @@ export default function Select() {
   };
 
   const handleNgClick = () => {
-    setModalStage("thanks");
+    setModalStage(MODAL_STAGES.THANKS);
     setTimeout(() => {
       setShowModal(false);
       setModalStage(null);
@@ -57,14 +65,14 @@ export default function Select() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <img src="/home.png" alt="Home" className={styles.homeIcon} onClick={handleHomeClick} />
-        <img src="/globe.png" alt="Globe" className={styles.homeIcon} />
+        <img src="/home.png" alt="Home" className={styles.homeIcon} onClick={handleHomeClick} aria-label="Home" />
+        <img src="/globe.png" alt="Globe" className={styles.homeIcon} aria-label="Globe" />
       </div>
       <h1 className={styles.title}>今の気持ちや気づきを教えてください。</h1>
       <div className={styles.grid}>
         {emotions.map((emotion) => (
           <div key={emotion.label} className={styles.button}>
-            <button onClick={() => handleEmotionClick(emotion)}>
+            <button onClick={() => handleEmotionClick(emotion)} aria-label={emotion.label}>
               <img src={emotion.img} alt={emotion.label} />
               {emotion.label}
             </button>
@@ -80,7 +88,7 @@ export default function Select() {
                 <p className="text-lg sm:text-xl md:text-2xl">{selectedEmotion.label}</p>
               </div>
             )}
-            {modalStage === 1 && (
+            {modalStage === MODAL_STAGES.INITIAL && (
               <>
                 <p className="mb-4 text-lg sm:text-xl md:text-2xl">これでよろしいですか？</p>
                 <button onClick={handleOkClick} className="bg-blue-500 text-white py-2 px-4 rounded mr-4">
@@ -91,7 +99,7 @@ export default function Select() {
                 </button>
               </>
             )}
-            {modalStage === 2 && (
+            {modalStage === MODAL_STAGES.DETAIL && (
               <>
                 <p className="mb-4 text-lg sm:text-xl md:text-2xl">詳しくお伺いしてもよろしいでしょうか？</p>
                 <button onClick={handleOkClick} className="bg-blue-500 text-white py-2 px-4 rounded mr-4">
@@ -102,7 +110,7 @@ export default function Select() {
                 </button>
               </>
             )}
-            {modalStage === "thanks" && <p className="mb-4 text-lg sm:text-xl md:text-2xl">ありがとうございました！</p>}
+            {modalStage === MODAL_STAGES.THANKS && <p className="mb-4 text-lg sm:text-xl md:text-2xl">ありがとうございました！</p>}
           </div>
         </div>
       )}

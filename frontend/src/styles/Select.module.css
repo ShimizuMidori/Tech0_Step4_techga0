@@ -44,8 +44,7 @@
 }
 
 .button img {
-  width: 56px; /* 80pxの70% */
-  height: 56px; /* 80pxの70% */
+  height: 64px; /* 80pxの70% */
   margin-bottom: 10px;
   display: block;
   margin: 0 auto;

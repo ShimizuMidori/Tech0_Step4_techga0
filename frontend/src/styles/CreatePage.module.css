@@ -3,83 +3,59 @@
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  position: relative;
+  height: 100vh;
 }
 
 .textareaContainer {
-  position: relative;
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  right: 0;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
 .textarea {
   width: 100%;
   padding: 10px;
-  .container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .textareaContainer {
-    position: relative;
-  }
-
-  .textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding-right: 50px; /* アイコン用のスペースを確保 */
-    box-sizing: border-box;
-  }
-
-  .iconContainer {
-    position: absolute;
-    right: 8px; /* テキストエリアの右端からの距離 */
-    bottom: 8px; /* テキストエリアの下端からの距離 */
-    display: flex;
-    gap: 5px;
-  }
-
-  .icon {
-    width: 18px; /* サイズを18pxに */
-    height: 18px;
-  }
-
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modalContent {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    text-align: center;
-  }
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding-right: 50px; /* アイコン用のスペースを確保 */
   box-sizing: border-box;
+  position: relative;
 }
 
 .iconContainer {
   position: absolute;
   right: 10px;
-  bottom: 10px;
+  bottom: 10px; /* 位置を少し上げる */
+  transform: translateY(-50%); /* アイコンをさらに上に移動 */
   display: flex;
   gap: 5px;
 }
 
 .icon {
-  width: 16px; /* サイズを50%に */
-  height: 16px;
+  width: 18px;
+  height: 18px;
+}
+
+.buttonContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 
 .modal {
