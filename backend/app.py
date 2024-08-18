@@ -100,31 +100,48 @@ async def chat_with_gpt(request: Request):
     data = await request.json()
     user_input = data.get('message')
 
+    # 検索用のキーワードリストを定義
+    keywords = ["勤務時間", "休暇申請", "残業規定", "服装規定", "機密情報の取り扱い", "セキュリティポリシー", "出張規定", "健康診断", "ハラスメント防止", "リモートワーク規定"]
+
+    # 入力された文章からキーワードを抽出
+    matching_keyword = None
+    for keyword in keywords:
+        if keyword in user_input:
+            matching_keyword = keyword
+            break
+
     # データベースセッションの作成
     session = SessionLocal()
 
     try:
-        # 社内規定を検索
-        query = select(Policy).where(
-            Policy.POLICY_TITLE.ilike(f"%{user_input}%") | 
-            Policy.POLICY_CONTENT.ilike(f"%{user_input}%")
-        )
-        result = session.execute(query).scalars().first()
+        if matching_keyword:
+            # 抽出したキーワードで社内規定を検索
+            query = select(Policy).where(
+                Policy.POLICY_TITLE.ilike(f"%{matching_keyword}%") | 
+                Policy.POLICY_CONTENT.ilike(f"%{matching_keyword}%")
+            )
+            result = session.execute(query).scalars().first()
 
-        if result:
-            logger.info(f"Found policy: {result.POLICY_TITLE}")  # ログを追加
-            context = """
-            役割: カウンセラー兼コンサルとして、従業員に対し、社内規定に基づいた助言を行います。
-            社内規定に基づいた回答を提供します。
-            """
-            assistant_message = f"以下の社内規定が見つかりました：\n\n{result.POLICY_CONTENT}"
+            if result:
+                logger.info(f"Found policy: {result.POLICY_TITLE}")
+                context = "あなたの役割は、従業員の質問に対し、社内規定に基づいた適切な回答を提供するカウンセラー兼コンサルタントです。以下の社内規定に基づいて回答してください。"
+                assistant_message = f"以下の社内規定が見つかりました：\n\n{result.POLICY_CONTENT}"
+                # ポリシーの内容をそのまま返す
+                return {"response": assistant_message}
+            else:
+                logger.info("No matching policy found.")
+                context = """
+                あなたの役割は、カウンセラー兼コンサルタントとして、従業員の感情や意見を理解し、それを経営判断に活かせる形で抽出することです。
+                従業員の感情や問題点を確認し、適切なサポートを提供してください。
+                """
+                assistant_message = "社内規定が見つかりませんでした。詳しく教えてください。どのようなお困りごとがありますか？"
         else:
-            logger.info("No matching policy found.")  # ログを追加
+            logger.info("No matching keyword found in the input.")
             context = """
-            役割: カウンセラー兼コンサルとして、従業員の感情や意見を理解し、経営判断に活かせるエッセンスを抽出します。
-            感情の確認と理由の探求を行い、事実と感情の区別をつけます。
+            あなたの役割は、カウンセラー兼コンサルタントとして、従業員の感情や意見を理解し、それを経営判断に活かせる形で抽出することです。
+            従業員の感情や問題点を確認し、適切なサポートを提供してください。
             """
-            assistant_message = "詳しく教えてください。どのようなお困りごとがありますか？"
+            assistant_message = "社内規定が見つかりませんでした。詳しく教えてください。どのようなお困りごとがありますか？"
 
         # GPT-4での対話生成
         response = openai.ChatCompletion.create(
@@ -146,6 +163,7 @@ async def chat_with_gpt(request: Request):
         raise HTTPException(status_code=500, detail="データベースクエリに失敗しました")
     finally:
         session.close()
+
 
 
 @app.post("/api/save_comment")
