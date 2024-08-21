@@ -1,16 +1,17 @@
 import os
 import logging
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine, select
 from datetime import datetime
 import openai
 import uvicorn
+from langdetect import detect, LangDetectException
 
 # .envファイルの読み込み
 load_dotenv()
@@ -100,13 +101,19 @@ async def chat_with_gpt(request: Request):
     data = await request.json()
     user_input = data.get('message')
 
+    # 言語を検出
+    try:
+        language = detect(user_input)
+    except LangDetectException:
+        language = "unknown"
+
     # 検索用のキーワードリストを定義
-    keywords = ["勤務時間", "休暇申請", "残業規定", "服装規定", "機密情報の取り扱い", "セキュリティポリシー", "出張規定", "健康診断", "ハラスメント防止", "リモートワーク規定"]
+    keywords = ["勤務時間", "休暇申請", "day off", "残業規定", "服装規定", "機密情報の取り扱い", "セキュリティポリシー", "出張規定", "健康診断", "ハラスメント防止", "リモートワーク規定"]
 
     # 入力された文章からキーワードを抽出
     matching_keyword = None
     for keyword in keywords:
-        if keyword in user_input:
+        if keyword.lower() in user_input.lower():  # 大文字小文字を無視して検索
             matching_keyword = keyword
             break
 
@@ -124,24 +131,47 @@ async def chat_with_gpt(request: Request):
 
             if result:
                 logger.info(f"Found policy: {result.POLICY_TITLE}")
-                context = "あなたの役割は、従業員の質問に対し、社内規定に基づいた適切な回答を提供するカウンセラー兼コンサルタントです。以下の社内規定に基づいて回答してください。"
-                assistant_message = f"以下の社内規定が見つかりました：\n\n{result.POLICY_CONTENT}"
-                # ポリシーの内容をそのまま返す
-                return {"response": assistant_message}
+                # 言語に応じてメッセージを選択
+                if language == "en":
+                    context = "Your role is to provide accurate answers based on company policies. The following policy was found:"
+                    assistant_message = f"The following policy was found:\n\n{result.POLICY_CONTENT}"
+                elif language == "ja":
+                    context = "あなたの役割は、従業員の質問に対し、社内規定に基づいた適切な回答を提供するカウンセラー兼コンサルタントです。以下の社内規定に基づいて回答してください。"
+                    assistant_message = f"以下の社内規定が見つかりました：\n\n{result.POLICY_CONTENT}"
+                else:
+                    context = "Your role is to assist employees by providing relevant advice. Unfortunately, we couldn't detect the language used."
+                    assistant_message = "We couldn't detect the language of your request. Please ensure you are using either English or Japanese."
+                
+                return {"response": assistant_message, "found_policy": True}
             else:
                 logger.info("No matching policy found.")
+                if language == "en":
+                    context = "Your role is to understand the emotions and concerns of employees and extract useful insights for management decisions."
+                    assistant_message = "No matching policy was found. Could you please provide more details about your concern?"
+                elif language == "ja":
+                    context = """
+                    あなたの役割は、カウンセラー兼コンサルタントとして、従業員の感情や意見を理解し、それを経営判断に活かせる形で抽出することです。
+                    従業員の感情や問題点を確認し、適切なサポートを提供してください。
+                    """
+                    assistant_message = "社内規定が見つかりませんでした。詳しく教えてください。どのようなお困りごとがありますか？"
+                else:
+                    context = "Your role is to assist employees by providing relevant advice. Unfortunately, we couldn't detect the language used."
+                    assistant_message = "We couldn't detect the language of your request. Please ensure you are using either English or Japanese."
+                
+        else:
+            logger.info("No matching keyword found in the input.")
+            if language == "en":
+                context = "Your role is to understand the emotions and concerns of employees and extract useful insights for management decisions."
+                assistant_message = "No matching policy was found. Could you please provide more details about your concern?"
+            elif language == "ja":
                 context = """
                 あなたの役割は、カウンセラー兼コンサルタントとして、従業員の感情や意見を理解し、それを経営判断に活かせる形で抽出することです。
                 従業員の感情や問題点を確認し、適切なサポートを提供してください。
                 """
                 assistant_message = "社内規定が見つかりませんでした。詳しく教えてください。どのようなお困りごとがありますか？"
-        else:
-            logger.info("No matching keyword found in the input.")
-            context = """
-            あなたの役割は、カウンセラー兼コンサルタントとして、従業員の感情や意見を理解し、それを経営判断に活かせる形で抽出することです。
-            従業員の感情や問題点を確認し、適切なサポートを提供してください。
-            """
-            assistant_message = "社内規定が見つかりませんでした。詳しく教えてください。どのようなお困りごとがありますか？"
+            else:
+                context = "Your role is to assist employees by providing relevant advice. Unfortunately, we couldn't detect the language used."
+                assistant_message = "We couldn't detect the language of your request. Please ensure you are using either English or Japanese."
 
         # GPT-4での対話生成
         response = openai.ChatCompletion.create(
@@ -156,7 +186,7 @@ async def chat_with_gpt(request: Request):
 
         full_response = response.choices[0].message.content.strip()
 
-        return {"response": full_response}
+        return {"response": full_response, "found_policy": False}
 
     except SQLAlchemyError as e:
         logger.error(f"Database query failed: {e}")
@@ -164,13 +194,10 @@ async def chat_with_gpt(request: Request):
     finally:
         session.close()
 
-
-
 @app.post("/api/save_comment")
 async def save_comment(request: Request):
     data = await request.json()
     user_id = data.get('user_id')
-    company_id = data.get('company_id')
     emotion_id = data.get('emotion_id')
     content = data.get('content')
     final_suggestion = data.get('final_suggestion', '')
@@ -181,7 +208,7 @@ async def save_comment(request: Request):
     try:
         # 新しいPOSTレコードの作成
         new_post = Post(
-            COMPANY_ID=company_id,
+            COMPANY_ID=None,  # MVPのために一時的にNoneに設定
             USER_ID=user_id,
             EMOTION_ID=emotion_id,
             CONTENT_ENCRYPTED=content,
