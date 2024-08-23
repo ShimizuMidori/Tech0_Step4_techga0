@@ -27,35 +27,33 @@ const CreatePage = () => {
 
   const handleChat = async () => {
     if (chatInput || transcript) {
-        const userMessage = chatInput || transcript;
-        addMessage(userMessage, "user");
+      const userMessage = chatInput || transcript;
+      addMessage(userMessage, "user");
 
-        try {
-            // FastAPIサーバーがlocalhost:8000で動作している場合のURL
-            const response = await fetch("http://localhost:8000/api/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ message: userMessage }),
-            });
+      try {
+        const response = await fetch("http://localhost:8000/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: userMessage }),
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                addMessage(data.response, "bot");
-            } else {
-                addMessage("エラーが発生しました。もう一度お試しください。", "bot");
-            }
-        } catch (error) {
-            console.error("API通信エラー:", error);
-            addMessage("通信エラーが発生しました。", "bot");
+        if (response.ok) {
+          const data = await response.json();
+          addMessage(data.response, "bot");
+        } else {
+          addMessage("エラーが発生しました。もう一度お試しください。", "bot");
         }
+      } catch (error) {
+        console.error("API通信エラー:", error);
+        addMessage("通信エラーが発生しました。", "bot");
+      }
 
-        setChatInput("");
-        resetTranscript();
+      setChatInput("");
+      resetTranscript();
     }
-};
-
+  };
 
   const addMessage = (text, sender) => {
     setChatHistory((prevHistory) => [...prevHistory, { text, sender }]);
@@ -65,7 +63,7 @@ const CreatePage = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index");
+      router.push("/"); // モーダルが閉じられた後、ルートページに遷移
     }, 3000);
   };
 
@@ -73,7 +71,7 @@ const CreatePage = () => {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      router.push("/index");
+      router.push("/"); // モーダルが閉じられた後、ルートページに遷移
     }, 3000);
   };
 

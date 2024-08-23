@@ -1,15 +1,13 @@
 .container {
-  max-width: 400px; /* 同じ幅を設定 */
+  max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
 
-/* 他のスタイルはそのまま */
-
 .header {
   display: flex;
-  justify-content: space-between; /* 左右に要素を配置 */
+  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
@@ -28,7 +26,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 常に2列 */
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
@@ -44,14 +42,135 @@
 }
 
 .button img {
-  height: 64px; /* 80pxの70% */
-  margin-bottom: 10px;
   display: block;
   margin: 0 auto;
+  max-width: 80px; /* すべてのアイコンに対して最大幅を80pxに統一 */
+  width: 100%;
+  height: 80px; /* 高さも固定して均一に */
+  object-fit: contain;
 }
 
 .button:hover {
-  transform: scale(1.05);
+  transform: scale(1.2);
+}
+
+/* Happy のアニメーション */
+.happy img:hover {
+  animation: happyAnimation 1s ease-in-out infinite alternate;
+}
+
+@keyframes happyAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Angry のアニメーション */
+.angry img:hover {
+  animation: angryAnimation 0.1s ease-in-out infinite;
+}
+
+@keyframes angryAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Sad のアニメーション */
+.sad img:hover {
+  animation: sadAnimation 1s ease-in-out infinite;
+}
+
+@keyframes sadAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(10deg);
+  }
+}
+
+/* Confused のアニメーション */
+.confused img:hover {
+  animation: confusedAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes confusedAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-20deg);
+  }
+  100% {
+    transform: rotate(20deg);
+  }
+}
+
+/* Fun のアニメーション */
+.fun img:hover {
+  animation: funAnimation 1s ease-in-out infinite;
+}
+
+@keyframes funAnimation {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+}
+
+/* Surprised のアニメーション */
+.surprised img:hover {
+  animation: surprisedAnimation 1s ease-out;
+}
+
+@keyframes surprisedAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Sorry のアニメーション */
+.sorry img:hover {
+  animation: sorryAnimation 1s ease-in-out infinite alternate;
+}
+
+@keyframes sorryAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-15deg);
+  }
 }
 
 .modal {
